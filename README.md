@@ -1,17 +1,17 @@
-## NetworkReading
-Powershell module for capturing network traffic (using ngprep)
+# NetworkReading
+Powershell module for capturing network traffic (using ngrep)
 
 Can be used for live capturing of all (m3u8) streams in any browser
 
-Prerequisites
+##Prerequisites
 -ngrep
 -ffmpeg (for streams capturing)
 
-#OS
+##OS
 -Windows (PS 5)
 -Linux (PS 6 alpha)
 
-#Cmdlets
+##Cmdlets
 -Start-NetworkReading
 -Stop-NetworkReading
 -Test-NetworkReading
