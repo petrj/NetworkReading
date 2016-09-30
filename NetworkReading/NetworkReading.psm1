@@ -1,8 +1,8 @@
 Function Test-App
 {
 	<#
-		.SYNOPSIS
-			Test any app utility
+        .SYNOPSIS
+            Test if any app exists
 
         .PARAMETER AppName
             If null or empty, using temp file
@@ -16,12 +16,12 @@ Function Test-App
     )
     process
     {
-		Write-Host "Testing $AppName"
+        Write-Host "Testing $AppName"
 
         Invoke-Expression "& $AppName --help"
 
-		Write-Host "$AppName found"
-		return $true
+        Write-Host "$AppName found"
+        return $true
 
 	Trap
 	{
@@ -33,14 +33,14 @@ Function Test-App
 
 function Start-NetworkReading
 {
-	<#
-	.SYNOPSIS
-		Read network communication using ngrep
+    <#
+    .SYNOPSIS
+        Read network communication using ngrep
 
-	.PARAMETER OutputFileName
+    .PARAMETER OutputFileName
         If null or empty, using temp file
 
-	.PARAMETER DeviceNumber
+    .PARAMETER DeviceNumber
         For windows only, see ngrep -L
 
     .OUTPUT
@@ -48,9 +48,9 @@ function Start-NetworkReading
 
     .EXAMPLE
         "NetworkData.txt" | Start-NetworkReading
-	#>
+    #>
 
-	[CmdletBinding(SupportsShouldProcess=$True)]
+    [CmdletBinding(SupportsShouldProcess=$True)]
     param
     (
         [parameter(Mandatory = $false, ValueFromPipeline = $true)]
@@ -91,20 +91,6 @@ function Start-NetworkReading
 
         Start-Process -FilePath "ngrep" -ArgumentList ($DeviceNumberString + " -W single -qilw `"get`" tcp dst port 80 ")  -RedirectStandardOutput $OutputFileName -NoNewWindow
 
-        <#
-    	$startInfo = New-Object System.Diagnostics.ProcessStartInfo
-        $startInfo.FileName = "ngrep"
-        $startInfo.RedirectStandardOutput = $true
-        $startInfo.Arguments = ($DeviceNumberString + " -W single -qilw `"get`" tcp dst port 80 ")
-
-        $startInfo.UseShellExecute = $false
-        $startInfo.CreateNoWindow = $false
-
-        $process = New-Object System.Diagnostics.Process
-        $process.StartInfo = $startInfo
-        $process.Start() | Out-Null
-        #>
-
         Write-Host ("Waiting 5 secs for ngrep run test...")
 
         Start-Sleep -Seconds 5
@@ -129,15 +115,15 @@ function Start-NetworkReading
 
 function Test-NetworkReading
 {
-	<#
-	.SYNOPSIS
-		Test network reading
+    <#
+    .SYNOPSIS
+	Test network reading
 
     .OUTPUT
         $true/$false
-	#>
+    #>
 
-	[CmdletBinding(SupportsShouldProcess=$True)]
+    [CmdletBinding(SupportsShouldProcess=$True)]
     param
     (
 
@@ -152,13 +138,13 @@ function Test-NetworkReading
 
 function Stop-NetworkReading
 {
-	<#
-	.SYNOPSIS
-		Stop network reading
+    <#
+    .SYNOPSIS
+	Stop network reading
         Kills all ngrep processes
-	#>
+    #>
 
-	[CmdletBinding(SupportsShouldProcess=$True)]
+    [CmdletBinding(SupportsShouldProcess=$True)]
     param
     (
     )
@@ -184,26 +170,26 @@ function Stop-NetworkReading
 
 function Get-NetworkReadingOutputUrl
 {
-	<#
-		.SYNOPSIS
-			Get any url from network reading (ngrep) output
+    <#
+    .SYNOPSIS
+        Get any url from network reading (ngrep) output
 
-		.PARAMETER File
-			Output File (Get-Item) provided by Start-NetworkReader (ngrep)
-            if not present using environment variable $env:networkReader_outpufilename
+    .PARAMETER File
+        Output File (Get-Item) provided by Start-NetworkReader (ngrep)
+        if not present using environment variable $env:networkReader_outpufilename
 
-        .EXAMPLE
-            Get-NetworkReadingOutputUrl
+    .EXAMPLE
+        Get-NetworkReadingOutputUrl
 
-        .EXAMPLE
-            Get-Item /temp/streams.txt | Get-NetworkReadingOutputUrl  | Where-Object { $_.AbsoluteUri.Contains("m3u") }
+    .EXAMPLE
+        Get-Item /temp/streams.txt | Get-NetworkReadingOutputUrl  | Where-Object { $_.AbsoluteUri.Contains("m3u") }
 
-         .OUTPUT
-            Array of founded url
-	#>
+     .OUTPUT
+        Array of founded url
+    #>
 
-	[CmdletBinding(SupportsShouldProcess=$True)]
-    param
+    [CmdletBinding(SupportsShouldProcess=$True)]
+param
     (
         [parameter(Mandatory = $false, ValueFromPipeline = $true)]
         $File
@@ -227,15 +213,6 @@ function Get-NetworkReadingOutputUrl
         }
 
         Write-Host ("Getting url from: " + $File.FullName)
-
-        <# workaround for linux
-        [System.IO.StreamReader] $sr=new-object "System.IO.StreamReader" ($File.FullName,[System.Text.Encoding]::ASCII)
-		$fileAsString = $sr.ReadToEnd()
-		$sr.Close()
-		$sr.Dispose()
-
-        $content = $fileAsString.Split([Environment]::NewLine)
-        #>
 
         $content = Get-Content -Path  $File.FullName
 
@@ -270,22 +247,22 @@ function Get-NetworkReadingOutputUrl
 
 function Select-NetworkReadingOutputUrl
 {
-	<#
-		.SYNOPSIS
-			Select streams provided by ngrep output
+    <#
+    .SYNOPSIS
+        Select streams provided by ngrep output
 
-        .PARAMETER Url
-			Array of url to select
+    .PARAMETER Url
+        Array of url to select
 
-		.PARAMETER Mask
-			Mask of data file to receive
-            Default mask is "m3u"
+    .PARAMETER Mask
+        Mask of data file to receive
+        Default mask is "m3u"
 
-        .EXAMPLE
-            Get-Item /temp/streams.txt | Get-NetworkReadingOutputUrl  | Where-Object { $_.AbsoluteUri.Contains("m3u") } | Select-NetworkReadingOutputUrl
-	#>
+    .EXAMPLE
+        Get-Item /temp/streams.txt | Get-NetworkReadingOutputUrl  | Where-Object { $_.AbsoluteUri.Contains("m3u") } | Select-NetworkReadingOutputUrl
+    #>
 
-	[CmdletBinding(SupportsShouldProcess=$True)]
+    [CmdletBinding(SupportsShouldProcess=$True)]
     param
     (
         [parameter(Mandatory = $true, ValueFromPipeline = $true)]
@@ -366,27 +343,27 @@ function Select-NetworkReadingOutputUrl
 
 function Save-NetworkStream
 {
-	<#
-		.SYNOPSIS
-			Downloads stream by (ffmpeg)
+    <#
+    .SYNOPSIS
+        Downloads stream by (ffmpeg)
 
-		.PARAMETER Url
-            Url of stream to download
+    .PARAMETER Url
+        Url of stream to download
 
-		.PARAMETER OutoutFileName
-            Name of received data file
-			Default value is "stream"
+    .PARAMETER OutoutFileName
+        Name of received data file
+        Default value is "stream"
 
-		.PARAMETER OutputExtension
-            Extension of received data file
-			Default value is ".ts"
+    .PARAMETER OutputExtension
+        Extension of received data file
+        Default value is ".ts"
 
-		.PARAMETER OutputDirectory
-            Directory for receiving data
-			Default value is "." (current directory)
-	#>
+    .PARAMETER OutputDirectory
+        Directory for receiving data
+        Default value is "." (current directory)
+    #>
 
-	[CmdletBinding(SupportsShouldProcess=$True)]
+    [CmdletBinding(SupportsShouldProcess=$True)]
     param
     (
         [parameter(Mandatory = $true, ValueFromPipeline = $true)]
@@ -410,58 +387,56 @@ function Save-NetworkStream
 
         if (-not ($OutputDirectory.EndsWith([System.IO.Path]::DirectorySeparatorChar)))
         {
-        	$OutputDirectory += [System.IO.Path]::DirectorySeparatorChar;
+            $OutputDirectory += [System.IO.Path]::DirectorySeparatorChar;
         }
 
         $urlNumber = 1
         while (Test-Path -Path ($OutputDirectory + $OutputFileName + $urlNumber.ToString().PadLeft(3,"0") + $OutputExtension))
-	    {
-		     $urlNumber++
-	    }
+        {
+            $urlNumber++
+        }
 
-	    $name = $OutputDirectory + $OutputFileName + $urlNumber.ToString().PadLeft(3,"0") + $OutputExtension
+	$name = $OutputDirectory + $OutputFileName + $urlNumber.ToString().PadLeft(3,"0") + $OutputExtension
 
         Write-Host "Saving stream $Url by ffmpeg to $name"
 
-	    $cmd = "ffmpeg -i `"$Url`" -c copy `"$name`""
+        $cmd = "ffmpeg -i `"$Url`" -c copy `"$name`""
 
-        #$cmd = "ffmpeg -i `"$Url`" -c:v libx264 -preset ultrafast -qp 0 `"$name`""
-
-	    Invoke-Expression "& $cmd"
+        Invoke-Expression "& $cmd"
     }
 }
 
 function Receive-NetworkStreamData
 {
-	<#
-		.SYNOPSIS
-			Downloads all streams (ffmpeg) provided by ngrep output
+    <#
+    .SYNOPSIS
+        Downloads all streams (ffmpeg) provided by ngrep output
 
-		.PARAMETER File
-			Output File (Get-Item) provided by Start-NetworkReader (ngrep)
-            if not present using environment variable $env:networkReader_outpufilename
+    .PARAMETER File
+       Output File (Get-Item) provided by Start-NetworkReader (ngrep)
+        if not present using environment variable $env:networkReader_outpufilename
 
-		.PARAMETER Mask
-			Mask of data file to receive
-            Default mask is "m3u"
+    .PARAMETER Mask
+        Mask of data file to receive
+        Default mask is "m3u"
 
-		.PARAMETER OutputFileName
-            Extension of received data file
-			Default value is "stream"
+    .PARAMETER OutputFileName
+        Extension of received data file
+        Default value is "stream"
 
-		.PARAMETER OutputExtension
-            Extension of received data file
-			Default value is ".ts"
+    .PARAMETER OutputExtension
+        Extension of received data file
+        Default value is ".ts"
 
-		.PARAMETER OutputDirectory
-            Directory for receiving data
-			Default value is "." (current directory)
+    .PARAMETER OutputDirectory
+        Directory for receiving data
+        Default value is "." (current directory)
 
-        .EXAMPLE
-            Get-Item /temp/streams.txt | Receive-NetworkStreamData2
-	#>
+    .EXAMPLE
+        Get-Item /temp/streams.txt | Receive-NetworkStreamData2
+    #>
 
-	[CmdletBinding(SupportsShouldProcess=$True)]
+    [CmdletBinding(SupportsShouldProcess=$True)]
     param
     (
         [parameter(Mandatory = $false, ValueFromPipeline = $true)]
@@ -505,8 +480,8 @@ function Receive-NetworkStreamData
     }
 }
 
-Export-ModuleMember Test-ngrep,Start-NetworkReading,Stop-NetworkReading,Test-NetworkReading,
-                    Receive-NetworkStreamData,Find-NetworkReadingOutputUrl,
-                    Get-NetworkReadingOutputUrl,Select-NetworkReadingOutputUrl,Save-NetworkStream,Receive-NetworkStreamData
+Export-ModuleMember Test-App,Start-NetworkReading,Stop-NetworkReading,Test-NetworkReading,
+                    Get-NetworkReadingOutputUrl,Select-NetworkReadingOutputUrl,
+                    Save-NetworkStream,Receive-NetworkStreamData
 
 
