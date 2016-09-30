@@ -1,5 +1,5 @@
 # NetworkReading
-Powershell module for capturing network traffic (using ngrep)
+Powershell module for capturing GET requests of network traffic (using ngrep)
 
 Can be used for live capturing of all (m3u8) streams in any browser
 
@@ -29,7 +29,7 @@ Howto list all GET data downloaded by your browser?
 4. Run Get-NetworkReadingOutputUrl 
 
 
-Howto capture m3u stream viewed in your browser?
+Howto capture m3u streams viewed in your browser?
 
 Linux:
 
@@ -37,8 +37,7 @@ Linux:
 
 Windows: 
 
-Choose your network device number by "ngrep -L"
-ffmpeg and ngrep must by in your PATH
+Choose your network device number by "ngrep -L", ffmpeg and ngrep must by in your PATH
 
     Start-NetworkReading -DeviceNumber 6 | Receive-NetworkStreamData -OutputDirectory "c:\temp"
 
