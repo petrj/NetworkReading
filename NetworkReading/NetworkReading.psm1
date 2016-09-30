@@ -1,18 +1,18 @@
 Function Test-App
 {
-	<#
-        .SYNOPSIS
-            Test if any app exists
+    <#
+    .SYNOPSIS
+        Test if any app exists
 
-        .PARAMETER AppName
-            If null or empty, using temp file
+    .PARAMETER AppName
+        If null or empty, using temp file
 
-	#>
-	[CmdletBinding(SupportsShouldProcess=$True)]
+    #>
+    [CmdletBinding(SupportsShouldProcess=$True)]
     param
     (
-         [parameter(Mandatory = $true, ValueFromPipeline = $true)]
-         [string]$AppName = $null
+        [parameter(Mandatory = $true, ValueFromPipeline = $true)]
+        [string]$AppName = $null
     )
     process
     {
@@ -25,8 +25,8 @@ Function Test-App
 
 	Trap
 	{
-			Write-Host -message "$AppName not found"
-			return $false
+            Write-Host -message "$AppName not found"
+            return $false
 	}
    }
 }
@@ -459,7 +459,7 @@ function Receive-NetworkStreamData
 
         Write-Host "Scannig ngrep output and receiving all streams"
 
-	    $urlNumber = 1
+	$urlNumber = 1
         $alreadyProcessedUrl = @()
         while ($true)
         {
@@ -480,8 +480,6 @@ function Receive-NetworkStreamData
     }
 }
 
-Export-ModuleMember Test-App,Start-NetworkReading,Stop-NetworkReading,Test-NetworkReading,
+Export-ModuleMember Start-NetworkReading,Stop-NetworkReading,Test-NetworkReading,
                     Get-NetworkReadingOutputUrl,Select-NetworkReadingOutputUrl,
                     Save-NetworkStream,Receive-NetworkStreamData
-
-
