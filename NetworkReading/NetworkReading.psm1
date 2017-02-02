@@ -227,6 +227,12 @@ param
 
             if (($urlStart -gt -1) -and ($urlfinish -gt -1) -and ($hostStart -gt -1))
             {
+		if ($urlFinish-$urlStart -lt 0)
+                {
+                    #invalid data?
+                    continue
+                }
+
                 $url = $line.Substring($urlStart+5,$urlFinish-$urlStart-5)
 
                 $line = $line.Substring($hostStart)
